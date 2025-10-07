@@ -7,18 +7,19 @@ from livekit.plugins import (
 )
 
 from livekit.plugins import google 
-load_dotenv(".env.local")
+from prompts import AGENT_INSTRUCTION, SESSION_INSTRUCTION
+load_dotenv()
 
 
 class Assistant(Agent):
     def __init__(self) -> None:
-        super().__init__(instructions="You are a helpful voice AI assistant.")
+        super().__init__(instructions=AGENT_INSTRUCTION)
 
 
 async def entrypoint(ctx: agents.JobContext):
     session = AgentSession(
         llm=google.beta.realtime.RealtimeModel(
-            voice="Charon"
+            voice="Aoede"
         )
     )
 
@@ -31,8 +32,10 @@ async def entrypoint(ctx: agents.JobContext):
         ),
     )
 
+    await ctx.connect()
+
     await session.generate_reply(
-        instructions="Greet the user and offer your assistance. You should start by speaking in English."
+        instructions=SESSION_INSTRUCTION
     )
 
 
